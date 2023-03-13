@@ -1,73 +1,148 @@
 import React, { useState } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, RefreshControl, ScrollView, SectionList, StyleSheet, Text, View } from 'react-native';
 
 
 export const arrItems = [
-  { key: 1, item: 'Item 1' },
-  { key: 2, item: 'Item 2' },
-  { key: 3, item: 'Item 3' },
-  { key: 4, item: 'Item 4' },
-  { key: 5, item: 'Item 5' },
-  { key: 6, item: 'Item 6' },
-  { key: 7, item: 'Item 7' },
-  { key: 8, item: 'Item 8' },
-  { key: 9, item: 'Item 9' },
-  { key: 10, item: 'Item 10' },
-  { key: 11, item: 'Item 11' },
-  { key: 12, item: 'Item 12' },
+  { name: 'Item 1' },
+  { name: 'Item 2' },
+  { name: 'Item 3' },
+  { name: 'Item 4' },
+  { name: 'Item 5' },
+  { name: 'Item 6' },
+  { name: 'Item 7' },
+  { name: 'Item 8' },
+  { name: 'Item 9' },
+  { name: 'Item 10' },
+  { name: 'Item 11' },
+  { name: 'Item 12' },
 ];
+
+export const data = [
+  {
+    title: 'Title 1',
+    data: ['Item 1-1', 'Item 1-2', 'Item 1-3'],
+  },
+  {
+    title: 'Title 2',
+    data: ['Item 2-1', 'Item 2-2', 'Item 2-3'],
+  },
+  {
+    title: 'Title 3',
+    data: ['Item 3-1'],
+  },
+  {
+    title: 'Title 4',
+    data: ['Item 4-1', 'Item 4-2'],
+  }
+]
 
 const App = () => {
 
   const [listItems, setListItems] = useState(arrItems);
   const [refreshing, setRefreshing] = useState(false);
+  const [Sections, setSections] = useState([
+    {
+      title: 'Title 1',
+      data: ['Item 1-1', 'Item 1-2'],
+    },
+  ]);
 
   const onRefresh = () => {
     setRefreshing(true);
-    setListItems([...listItems, {key: 13, item: 'Item 13'}]);
+    const adding_index = Sections.length + 1;
+    setSections([...Sections,
+    {
+      title: 'Title ' + adding_index,
+      data:
+        [
+          'Item ' + adding_index + '-1',
+          'Item ' + adding_index + '-2'
+        ],
+    }
+    ]);
     setRefreshing(false);
   }
 
   return (
-    <ScrollView
-      style={styles.body}
+    /* EXERCISE */
+    <SectionList
+      keyExtractor={(item, index) => index.toString()}
+      sections={Sections}
+      renderItem={({ item }) => (
+        <View style={styles.item}>
+          <Text style={styles.text_item}>{item}</Text>
+        </View >
+      )}
+      renderSectionHeader={({ section }) => (
+        <View style={styles.header}>
+          <Text style={styles.text_header}>{section.title}</Text>
+        </View>
+      )}
       refreshControl={
-        <RefreshControl 
+        < RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-          color={['#ff00ff']}
         />
       }
-    >
-      {
-        listItems.map(ele => (
-          <View style={styles.item} key={ele.key}>
-            <Text style={styles.text}>{ele.item}</Text>
-          </View>
-        ))
-      }
-    </ScrollView>
+    />
+
+    /* SECTION LIST */
+    // <SectionList
+    //   keyExtractor={(item, index) => index.toString()}
+    //   sections={data}
+    //   renderItem={({ item }) => (
+    //     <Text style={styles.text}>{item}</Text>
+    //   )}
+    //   renderSectionHeader={({ section }) => (
+    //     <View style={styles.item}>
+    //       <Text style={styles.text}>{section.title}</Text>
+    //     </View>
+    //   )}
+    // />
+
+    /* FLAT LIST */
+    // <FlatList
+    //   data={listItems}
+    //   keyExtractor={(item, index) => index.toString()}
+    //   renderItem={({ item }) => (
+    //     <View style={styles.item}>
+    //       <Text style={styles.text}>{item.name}</Text>
+    //     </View>
+    //   )}
+    //   refreshControl={
+    //     <RefreshControl
+    //       refreshing={refreshing}
+    //       onRefresh={onRefresh}
+    //       color={['#ff00ff']}
+    //     />
+    //   }
+    // />
   );
 };
 
 const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#fff',
-  },
-  item: {
+  header: {
     backgroundColor: '#4ae1fa',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
+    borderWidth: 2,
   },
-  text: {
-    color: '#000',
+  item: {
+    borderBottomWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text_header: {
+    color: '#000000',
     fontSize: 45,
     fontStyle: 'italic',
     margin: 10,
-  }
+  },
+  text_item: {
+    color: '#000000',
+    fontSize: 35,
+    margin: 5,
+  },
 });
 
 export default App;
