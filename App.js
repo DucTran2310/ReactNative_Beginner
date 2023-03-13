@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
-import { FlatList, RefreshControl, ScrollView, SectionList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, FlatList, Pressable, RefreshControl, ScrollView, SectionList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const App = () => {
 
   const [name, setName] = useState('');
+  const [submitted, SetSubmitted] = useState(false);
+
+  const onPressHandler = () => {
+    SetSubmitted(!submitted);
+    if (submitted === true) {
+      setName('');
+    }
+  }
+
+  const handleChangeText = (value) => {
+    setName(value)
+  }
 
   return (
     <View style={styles.body}>
@@ -13,11 +25,38 @@ const App = () => {
       <TextInput
         style={styles.input}
         placeholder={'AdStar'}
-        onChangeText={(value) => setName(value)}
+        onChangeText={handleChangeText}
+        value={name}
       />
-      <Text style={styles.text}>
-        Your name is: {name}
-      </Text>
+      {/* <Button
+        title={submitted ? 'Clear' : 'Submit'}
+        onPress={onPressHandler}
+        disabled={submitted}
+      /> */}
+      {/* <TouchableOpacity
+        style={styles.button}
+        onPress={onPressHandler}
+        activeOpacity={0.5}
+      >
+        <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
+      </TouchableOpacity> */}
+      <Pressable
+        style={({ pressed }) => [
+          { backgroundColor: pressed ? '#ddd' : '#00ff00' },
+          styles.button
+        ]}
+        android_ripple={{color: '#00f'}}
+        onPress={onPressHandler}
+      >
+        <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
+      </Pressable>
+      {
+        submitted ?
+          <Text style={styles.text}>
+            You are registered as {name}
+          </Text>
+          : null
+      }
     </View>
   );
 };
@@ -39,7 +78,14 @@ const styles = StyleSheet.create({
     borderColor: '#555',
     borderRadius: 5,
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  button: {
+    width: 150,
+    height: 50,
+    // backgroundColor: '#00ff00',
+    alignItems: 'center'
   }
 });
 
