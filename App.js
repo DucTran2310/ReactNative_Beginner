@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, FlatList, Pressable, RefreshControl, ScrollView, SectionList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Button, FlatList, Pressable, RefreshControl, ScrollView, SectionList, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
 
 const App = () => {
 
@@ -7,7 +7,24 @@ const App = () => {
   const [submitted, SetSubmitted] = useState(false);
 
   const onPressHandler = () => {
-    SetSubmitted(!submitted);
+    if(name.length > 3) {
+      SetSubmitted(!submitted);
+    } else {
+      // Alert.alert('Warning', 'The name must be longer than 3 characters', [
+      //   {text: 'DO NOT SHOW AGAIN', onPress: () => console.warn('Do not show again')},
+      //   {text: 'Cancel', onPress: () => console.warn('Cancel Pressed!!!')},
+      //   {text: 'OK', onPress: () => console.warn('OK Pressed!!!')}
+      // ],
+      // {
+      //   cancelable: true,
+      //   onDismiss: () => console.warn('Alert dismissed!')
+      // }
+      // )
+      ToastAndroid.show(
+        'The name must be longer than 3 characters',
+        ToastAndroid.LONG
+      )
+    }
     if (submitted === true) {
       setName('');
     }
