@@ -1,29 +1,17 @@
 import React, { useState } from 'react';
-import { Alert, Button, FlatList, Pressable, RefreshControl, ScrollView, SectionList, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import { Alert, Button, FlatList, Modal, Pressable, RefreshControl, ScrollView, SectionList, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
 
 const App = () => {
 
   const [name, setName] = useState('');
   const [submitted, SetSubmitted] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const onPressHandler = () => {
-    if(name.length > 3) {
+    if (name.length > 3) {
       SetSubmitted(!submitted);
     } else {
-      // Alert.alert('Warning', 'The name must be longer than 3 characters', [
-      //   {text: 'DO NOT SHOW AGAIN', onPress: () => console.warn('Do not show again')},
-      //   {text: 'Cancel', onPress: () => console.warn('Cancel Pressed!!!')},
-      //   {text: 'OK', onPress: () => console.warn('OK Pressed!!!')}
-      // ],
-      // {
-      //   cancelable: true,
-      //   onDismiss: () => console.warn('Alert dismissed!')
-      // }
-      // )
-      ToastAndroid.show(
-        'The name must be longer than 3 characters',
-        ToastAndroid.LONG
-      )
+      setShowWarning(true)
     }
     if (submitted === true) {
       setName('');
@@ -36,6 +24,31 @@ const App = () => {
 
   return (
     <View style={styles.body}>
+      <Modal
+        visible={showWarning}
+        transparent
+        onRequestClose={() => setShowWarning(false)}
+        animationType='slide'
+        hardwareAccelerated
+      >
+        <View style={styles.centered_view}>
+          <View style={styles.warning_modal}>
+            <View style={styles.warning_title}>
+              <Text >WARNING!!!</Text>
+            </View>
+            <View style={styles.warning_body}>
+            <Text style={styles.text}>The name must be longer than 3 characters.</Text>
+            </View>
+            <Pressable
+              onPress={() => setShowWarning(false)}
+              style={styles.warning_button}
+              android_ripple={{color: '#fff'}}
+            >
+              <Text style={styles.text}>OK</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.text}>
         Please write your name:
       </Text>
@@ -62,7 +75,7 @@ const App = () => {
           { backgroundColor: pressed ? '#ddd' : '#00ff00' },
           styles.button
         ]}
-        android_ripple={{color: '#00f'}}
+        android_ripple={{ color: '#00f' }}
         onPress={onPressHandler}
       >
         <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
@@ -87,7 +100,8 @@ const styles = StyleSheet.create({
   text: {
     color: '#000',
     fontSize: 20,
-    margin: 10
+    margin: 10,
+    textAlign: 'center'
   },
   input: {
     width: 200,
@@ -103,6 +117,38 @@ const styles = StyleSheet.create({
     height: 50,
     // backgroundColor: '#00ff00',
     alignItems: 'center'
+  },
+  centered_view: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000099'
+  },
+  warning_modal: {
+    width: 300,
+    height: 300,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 20
+  },
+  warning_title: {
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ff0',
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+  warning_body: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  warning_button: {
+    backgroundColor: '#00ffff',
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20
   }
 });
 
