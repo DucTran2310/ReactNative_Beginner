@@ -1,48 +1,49 @@
 import React, { useState } from 'react';
-import { Alert, Button, FlatList, Modal, Pressable, RefreshControl, ScrollView, SectionList, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  ImageBackground, Modal, Pressable, StyleSheet, Text,
+  TextInput, View
+} from 'react-native';
 
 const App = () => {
 
-  const [name, setName] = useState('');
+  const [name, SetName] = useState('');
   const [submitted, SetSubmitted] = useState(false);
-  const [showWarning, setShowWarning] = useState(false);
-
+  const [showWarning, SetshowWarning] = useState(false);
   const onPressHandler = () => {
     if (name.length > 3) {
       SetSubmitted(!submitted);
     } else {
-      setShowWarning(true)
+      SetshowWarning(true);
     }
-    if (submitted === true) {
-      setName('');
-    }
-  }
-
-  const handleChangeText = (value) => {
-    setName(value)
   }
 
   return (
-    <View style={styles.body}>
+    <ImageBackground
+      style={styles.body}
+      source={{ uri: 'https://cdn.pixabay.com/photo/2013/07/12/12/35/texture-145968_960_720.png' }}
+    >
       <Modal
         visible={showWarning}
         transparent
-        onRequestClose={() => setShowWarning(false)}
+        onRequestClose={() =>
+          SetshowWarning(false)
+        }
         animationType='slide'
         hardwareAccelerated
       >
         <View style={styles.centered_view}>
           <View style={styles.warning_modal}>
             <View style={styles.warning_title}>
-              <Text >WARNING!!!</Text>
+              <Text style={styles.text}>WARNING!</Text>
             </View>
             <View style={styles.warning_body}>
-            <Text style={styles.text}>The name must be longer than 3 characters.</Text>
+              <Text style={styles.text}>The name must be longer than 3 charachters</Text>
             </View>
             <Pressable
-              onPress={() => setShowWarning(false)}
+              onPress={() => SetshowWarning(false)}
               style={styles.warning_button}
-              android_ripple={{color: '#fff'}}
+              android_ripple={{ color: '#fff' }}
             >
               <Text style={styles.text}>OK</Text>
             </Pressable>
@@ -54,54 +55,55 @@ const App = () => {
       </Text>
       <TextInput
         style={styles.input}
-        placeholder={'AdStar'}
-        onChangeText={handleChangeText}
-        value={name}
+        placeholder='e.g. John'
+        onChangeText={(value) => SetName(value)}
       />
-      {/* <Button
-        title={submitted ? 'Clear' : 'Submit'}
-        onPress={onPressHandler}
-        disabled={submitted}
-      /> */}
-      {/* <TouchableOpacity
-        style={styles.button}
-        onPress={onPressHandler}
-        activeOpacity={0.5}
-      >
-        <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
-      </TouchableOpacity> */}
       <Pressable
+        onPress={onPressHandler}
+        hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }}
+        android_ripple={{ color: '#00f' }}
         style={({ pressed }) => [
-          { backgroundColor: pressed ? '#ddd' : '#00ff00' },
+          { backgroundColor: pressed ? '#dddddd' : '#00ff00' },
           styles.button
         ]}
-        android_ripple={{ color: '#00f' }}
-        onPress={onPressHandler}
       >
-        <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
+        <Text style={styles.text}>
+          {submitted ? 'Clear' : 'Submit'}
+        </Text>
       </Pressable>
       {
         submitted ?
-          <Text style={styles.text}>
-            You are registered as {name}
-          </Text>
-          : null
+          <View style={styles.body}>
+            <Text style={styles.text}>
+              You are registered as {name}
+            </Text>
+            <Image
+              style={styles.image}
+              source={require('./assets/done.png')}
+              resizeMode='stretch'
+            />
+          </View>
+          :
+          <Image
+            style={styles.image}
+            source={{ uri: 'https://cdn.pixabay.com/photo/2018/01/04/15/51/404-error-3060993_960_720.png' }}
+            resizeMode='stretch'
+          />
       }
-    </View>
+    </ImageBackground >
   );
 };
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   text: {
-    color: '#000',
+    color: '#000000',
     fontSize: 20,
     margin: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   input: {
     width: 200,
@@ -115,8 +117,7 @@ const styles = StyleSheet.create({
   button: {
     width: 150,
     height: 50,
-    // backgroundColor: '#00ff00',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   centered_view: {
     flex: 1,
@@ -127,10 +128,10 @@ const styles = StyleSheet.create({
   warning_modal: {
     width: 300,
     height: 300,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#000',
-    borderRadius: 20
+    borderRadius: 20,
   },
   warning_title: {
     height: 50,
@@ -143,12 +144,17 @@ const styles = StyleSheet.create({
   warning_body: {
     height: 200,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   warning_button: {
     backgroundColor: '#00ffff',
+    borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20
+  },
+  image: {
+    width: 100,
+    height: 100,
+    margin: 10,
   }
 });
 
