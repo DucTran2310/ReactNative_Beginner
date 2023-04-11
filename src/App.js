@@ -1,65 +1,66 @@
-import * as React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+// import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import ScreenA from './ScreenA';
+import ScreenB from './ScreenB';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-function HomeScreen({navigation}) {
-
-  const pnPressHandler = () => {
-    navigation.navigate("Product")
-  }
-
-  return (
-    <View style={styles.body}>
-      <Text style={styles.text}>
-          Home Screen
-        </Text>
-      <Pressable
-        onPress={pnPressHandler}
-        style={({presses}) => ({ backgroundColor: presses ? '#ddd' : '#0f0' })}
-      >
-        <Text style={styles.text}>
-          Go to Product Screen
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function Product() {
-  return (
-    <View style={styles.body}>
-      <Text style={styles.text}>
-        Product Screen
-      </Text>
-    </View>
-  );
-}
-
-const Stack = createNativeStackNavigator();
+// const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
+// const Tab = createMaterialTopTabNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Product" component={Product} />
-      </Stack.Navigator>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, size, color }) => {
+            let iconName;
+            if (route.name === 'Screen_A') {
+              iconName = 'autoprefixer';
+              size = focused ? 25 : 20;
+              color = focused ? '#f0f' : '#555';
+            } else if (route.name === 'Screen_B') {
+              iconName = 'btc';
+              size = focused ? 25 : 20;
+              color = focused ? '#f0f' : '#555';
+            }
+            return (
+              <FontAwesome5
+                name={iconName}
+                size={size}
+                color={color}
+              />
+            )
+          }
+        })}
+        tabBarOptions={{
+          activeTintColor: '#f0f',
+          inactiveTintColor: '#555',
+          activeBackgroundColor: '#fff',
+          inactiveBackgroundColor: '#999',
+          showLabel: true,
+          labelStyle: { fontSize: 14 },
+          showIcon: true,
+        }}
+        activeColor='#f0edf6'
+        inactiveColor='#3e2465'
+        barStyle={{ backgroundColor: '#694fad' }}
+      >
+        <Tab.Screen
+          name="Screen_A"
+          component={ScreenA}
+          // options={{ tabBarBadge: 3 }}
+        />
+        <Tab.Screen
+          name="Screen_B"
+          component={ScreenB}
+        />
+      </Tab.Navigator>
     </NavigationContainer>
-  );
+  )
 }
-
-const styles = StyleSheet.create({
-  body: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  text: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    margin: 10
-  }
-})
 
 export default App;
